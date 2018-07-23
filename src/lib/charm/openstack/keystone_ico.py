@@ -28,9 +28,15 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
 
     def install(self):
         log('Starting Keystone ICO installation')
-
+        subprocess.check_call(['dpkg', '-i', 'keystone-ico_1_amd64.deb'])
         status_set('active', 'Unit is ready')
 
     def get_ico_conf(self):
         log('Setting keystone configuration')
-        return config('token-secret')
+        if config('token-secret'):
+            token = config('token-secret')
+        else:
+            token = subprocess.check_output(
+                ['dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64'],
+                shell=True)
+        return token
