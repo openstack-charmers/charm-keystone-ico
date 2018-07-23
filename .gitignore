@@ -1,0 +1,16 @@
+bin
+.coverage
+.testrepository
+.tox
+tags
+*.sw[nop]
+*.pyc
+joined-string
+.unit-state.db
+trusty/**
+xenial/
+func-results.json
+.local
+__pycache__
+.stestr
+
