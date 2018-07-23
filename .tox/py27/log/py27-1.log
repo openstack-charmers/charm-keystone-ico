@@ -1,0 +1,5 @@
+actionid: py27
+msg: getenv
+cmdargs: ['/home/mskalka/Projects/charms/layers/charm-keystone-ico/.tox/py27/bin/pip', 'install', '-r/home/mskalka/Projects/charms/layers/charm-keystone-ico/requirements.txt']
+
+Could not open requirements file: [Errno 2] No such file or directory: '/home/mskalka/Projects/charms/layers/charm-keystone-ico/requirements.txt'

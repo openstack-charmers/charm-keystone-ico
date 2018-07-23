@@ -1,3 +1,4 @@
 includes:
   - 'layer:openstack'
-  - 'interface:ico'
+  - 'interface:keystone-ico'
+repo: https://github.com/mskaka/charm-keystone-ico.git
