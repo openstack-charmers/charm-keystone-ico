@@ -1,0 +1,12 @@
+options:
+  token-secret:
+    type: string
+    default:
+    description: |
+      Secret token for IBM Cloud Orchestrator. If you have an existing IBM
+      Cloud Orchestrator installation that is integrated with IBM Cloud Manager
+      with OpenStack V4.3 or external OpenStack Kilo, copy the
+      simple_token_secret value from /etc/keystone/keystone.conf file of your
+      existing installation. If this is a new or standalone installation,
+      leave this field blank to auto-generate a token or generate your own with
+      `dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64`
