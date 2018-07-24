@@ -6,6 +6,9 @@ from charmhelpers.core.hookenv import (
     config,
     log,
     status_set,
+    is_leader,
+    leader_get,
+    leader_set,
 )
 import charms_openstack.charm
 
@@ -32,11 +35,15 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
         status_set('active', 'Unit is ready')
 
     def get_ico_conf(self):
-        log('Setting keystone configuration')
+        log('Setting token configuration')
         if config('token-secret'):
             token = config('token-secret')
         else:
-            token = subprocess.check_output(
-                ['dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64'],
-                shell=True)
+            if is_leader():
+                token = str(subprocess.check_output(
+                    ['dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64'],
+                    shell=True).strip())
+                leader_set({'token': token})
+            else:
+                token = leader_get('token')
         return token
