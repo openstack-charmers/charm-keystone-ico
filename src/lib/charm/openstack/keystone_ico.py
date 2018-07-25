@@ -42,7 +42,7 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
             if is_leader():
                 token = str(subprocess.check_output(
                     ['dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64'],
-                    shell=True).strip())
+                    shell=True).strip().decode('utf-8'))
                 leader_set({'token': token})
             else:
                 token = leader_get('token')
