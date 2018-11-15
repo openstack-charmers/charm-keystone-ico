@@ -36,7 +36,7 @@ def install_ico():
 def configure_keystone_principal(principle):
 
     with provide_charm_instance() as charm_class:
-        config = {"service-name": charm_class.name,
+        config = {"service_name": charm_class.name,
                   "keystone_conf": {
                         "extra_config": {
                             "header": "authentication",
