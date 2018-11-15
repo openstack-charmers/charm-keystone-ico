@@ -36,33 +36,4 @@ def install_ico():
 def configure_keystone_principal(principle):
 
     with provide_charm_instance() as charm_class:
-        config = {"service_name": charm_class.name,
-                  "keystone_conf": {
-                        "extra_config": {
-                            "header": "authentication",
-                            "body": {
-                               "simple_token_header": "SimpleToken",
-                               "simple_token_secret": charm_class.get_ico_conf()
-                            },
-                        },
-                        "auth": {
-                            "methods": "external,password,token,oauth1",
-                            "extra_config": {
-                                "external": "keystone.auth.plugins.external.Domain",
-                            },
-                        },
-                   },
-                  "paste_ini": {
-                        "pipeline": "cors sizelimit url_normalize request_id build_auth_context token_auth json_body "
-                                    "simpletoken ec2_extension public_service",
-                        "extra_config": {
-                            "header": "filter:simpletoken",
-                            "body": {
-                                "paste.filter_factory":
-                                    "keystone.middleware.simpletoken:SimpleTokenAuthentication.factory"
-                            }
-                        },
-                    },
-                  }
-
-    principle.configure_principal(config=config)
+        principle.configure_principal(service_name=charm_class.name, token=charm_class.get_ico_conf())
