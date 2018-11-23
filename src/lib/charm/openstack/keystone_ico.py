@@ -50,4 +50,18 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
                 leader_set({'token': token})
             else:
                 token = leader_get('token')
-        return token
+        return {"extra_config": {
+                    "header": "authentication",
+                    "body": {
+                        "simple_token_header": "SimpleToken",
+                        "simple_token_secret": token
+                    },
+                 },
+                "auth": {
+                     "methods": "external,password,token,oauth1",
+                     "extra_config": {
+                            "external": "keystone.auth.plugins.external.Domain",
+                     },
+                 },
+                }
+

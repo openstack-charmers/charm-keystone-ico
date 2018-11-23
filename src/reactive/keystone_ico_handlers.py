@@ -36,4 +36,5 @@ def install_ico():
 def configure_keystone_principal(principle):
 
     with provide_charm_instance() as charm_class:
-        principle.configure_principal(service_name=charm_class.name, token=charm_class.get_ico_conf())
+        principle.configure_principal(service_name=charm_class.name,
+                                      keystone_conf=charm_class.get_ico_conf())
