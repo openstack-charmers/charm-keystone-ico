@@ -34,7 +34,7 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
         subprocess.check_call(['dpkg', '-i', 'keystone-ico_1_amd64.deb'])
         status_set('active', 'Unit is ready')
 
-    def get_ico_conf(self):
+    def get_ico_token(self):
         log('Setting token configuration')
         if config('token-secret'):
             token = config('token-secret')
@@ -50,18 +50,5 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
                 leader_set({'token': token})
             else:
                 token = leader_get('token')
-        return {"extra_config": {
-                    "header": "authentication",
-                    "body": {
-                        "simple_token_header": "SimpleToken",
-                        "simple_token_secret": token
-                    },
-                 },
-                "auth": {
-                     "methods": "external,password,token,oauth1",
-                     "extra_config": {
-                            "external": "keystone.auth.plugins.external.Domain",
-                     },
-                 },
-                }
+        return token
 

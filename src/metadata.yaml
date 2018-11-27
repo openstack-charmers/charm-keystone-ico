@@ -1,6 +1,6 @@
 name: keystone-ico
 summary: IBM Cloud Orchestrator OpenStack integration
-maintainer: Michael Skalka <Michael.Skalka@mskalka>
+maintainer: Michael Skalka <Michael.Skalka@mskalka> and Aymen Frikha <Aymen.Frikha@canonical.com>
 description: |
 
 tags:
@@ -9,10 +9,10 @@ subordinate: true
 series:
   - xenial
 provides:
-  keystone-ico:
-    interface: keystone-ico
+  keystone-middleware:
+    interface: keystone-middleware
     scope: container
 requires:
-  container:
+  juju-info:
     interface: juju-info
     scope: container

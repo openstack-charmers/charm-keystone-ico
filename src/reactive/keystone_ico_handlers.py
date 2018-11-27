@@ -18,6 +18,8 @@ from charms_openstack.charm import (
     provide_charm_instance,
     use_defaults,
 )
+from charmhelpers.core import hookenv
+
 import charm.openstack.keystone_ico as ico  # noqa
 
 
@@ -31,10 +33,16 @@ def install_ico():
     reactive.set_state('ico.installed')
 
 
-@reactive.when('keystone-ico.connected')
+@reactive.when('keystone-middleware.connected')
 @reactive.when('ico.installed')
 def configure_keystone_principal(principle):
 
     with provide_charm_instance() as charm_class:
+        hookenv.log("charm data sent are {} {}".format(charm_class.name,
+                                                       charm_class.get_ico_token), level='DEBUG')
+
         principle.configure_principal(service_name=charm_class.name,
-                                      keystone_conf=charm_class.get_ico_conf())
+                                      simple_token_secret=charm_class.get_ico_token(),
+                                      methods="external,password,token,oauth1",
+                                      external="keystone.auth.plugins.external.Domain",
+                                      simple_token_header="SimpleToken")
