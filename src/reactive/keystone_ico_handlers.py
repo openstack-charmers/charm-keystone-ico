@@ -1,4 +1,4 @@
-# Copyright 2016 Canonical Ltd
+# Copyright 2018 Canonical Ltd
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ from charms_openstack.charm import (
     provide_charm_instance,
     use_defaults,
 )
-from charmhelpers.core import hookenv
-
 import charm.openstack.keystone_ico as ico  # noqa
-
 
 use_defaults('update-status')
 
@@ -38,11 +35,16 @@ def install_ico():
 def configure_keystone_principal(principle):
 
     with provide_charm_instance() as charm_class:
-        hookenv.log("charm data sent are {} {}".format(charm_class.name,
-                                                       charm_class.get_ico_token), level='DEBUG')
-
+        charm_class.setup_simple_token_filter()
         principle.configure_principal(service_name=charm_class.name,
                                       simple_token_secret=charm_class.get_ico_token(),
                                       methods="external,password,token,oauth1",
                                       external="keystone.auth.plugins.external.Domain",
                                       simple_token_header="SimpleToken")
+
+
+@reactive.when('keystone-middleware.departing')
+def remove_ico_filter():
+    with provide_charm_instance() as charm_class:
+        charm_class.uninstall()
+        charm_class.remove_simple_token_filter()
