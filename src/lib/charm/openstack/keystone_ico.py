@@ -11,11 +11,6 @@ from charmhelpers.core.hookenv import (
 )
 import charms_openstack.charm
 
-from charmhelpers.contrib.openstack.utils import (
-    CompareOpenStackReleases,
-    os_release,
-)
-
 
 class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
 
@@ -62,9 +57,12 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
         filter_config['filter:simpletoken'] = {}
         filter_factory_config = 'keystone.middleware.simpletoken:' \
                                 'SimpleTokenAuthentication.factory'
-        filter_config['filter:simpletoken']['paste.filter_factory'] = filter_factory_config
+        filter_config['filter:simpletoken']['paste.filter_factory'] = \
+            filter_factory_config
 
-        for section in ['pipeline:public_api', 'pipeline:admin_api', 'pipeline:api_v3']:
+        for section in ['pipeline:public_api',
+                        'pipeline:admin_api',
+                        'pipeline:api_v3']:
             if 'simpletoken' not in filter_config[section]['pipeline']:
                 pipeline = filter_config[section]['pipeline'].split(' ')
                 # The filter must come after the json_body
@@ -84,7 +82,9 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
         if 'filter:simpletoken' in filter_config:
             del filter_config['filter:simpletoken']
 
-        for section in ['pipeline:public_api', 'pipeline:admin_api', 'pipeline:api_v3']:
+        for section in ['pipeline:public_api',
+                        'pipeline:admin_api',
+                        'pipeline:api_v3']:
             if 'simpletoken' in filter_config[section]['pipeline']:
                 pipeline = filter_config[section]['pipeline'].split(' ')
                 pipeline.remove('simpletoken')

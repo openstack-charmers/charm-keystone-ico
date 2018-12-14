@@ -1,3 +1,4 @@
+
 import mock
 
 import reactive.keystone_ico_handlers as handlers
@@ -13,7 +14,10 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
         # The keys are the function names that the hook attaches to.
         hook_set = {
             'when': {
-                'configure_neutron_plugin': ('keystone-ico.connected', ),
+                'configure_keystone_middleware':
+                    ('keystone-middleware.connected', ),
+                'remove_ico_filter':
+                    ('keystone-middleware.departing',)
             },
             'when_not': {
                 'install_packages': ('ico.installed', ),
@@ -42,3 +46,14 @@ class TestHandlers(test_utils.PatchHelper):
         the_charm.install.assert_called_once_with()
         calls = [mock.call('ico.installed')]
         self.set_state.assert_has_calls(calls)
+
+    def test_configure_keystone_middleware(self):
+        the_charm = self._patch_provide_charm_instance()
+        self.patch_object(handlers.reactive, 'set_state')
+        self.patch_object(handlers.reactive.RelationBase, 'from_state',
+                          return_value=None)
+        principal = mock.MagicMock()
+        handlers.configure_keystone_middleware(principal)
+        the_charm.setup_simple_token_filter.assert_called_once()
+        the_charm.get_ico_token.assert_called_once()
+        self.set_state.assert_called_once_with('ico.configured')

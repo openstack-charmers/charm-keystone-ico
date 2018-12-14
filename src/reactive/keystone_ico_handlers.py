@@ -14,33 +14,28 @@
 
 import charms.reactive as reactive
 
-from charms_openstack.charm import (
-    provide_charm_instance,
-    use_defaults,
-)
+from charms_openstack.charm import provide_charm_instance
 import charm.openstack.keystone_ico as ico  # noqa
-
-use_defaults('update-status')
 
 
 @reactive.when_not('ico.installed')
-def install_ico():
+def install_packages():
     with provide_charm_instance() as charm_class:
         charm_class.install()
     reactive.set_state('ico.installed')
 
 
 @reactive.when('keystone-middleware.connected')
-@reactive.when('ico.installed')
-def configure_keystone_principal(principle):
-
+def configure_keystone_middleware(principle):
     with provide_charm_instance() as charm_class:
         charm_class.setup_simple_token_filter()
-        principle.configure_principal(service_name=charm_class.name,
-                                      simple_token_secret=charm_class.get_ico_token(),
-                                      methods="external,password,token,oauth1",
-                                      external="keystone.auth.plugins.external.Domain",
-                                      simple_token_header="SimpleToken")
+        principle.configure_principal(
+            service_name=charm_class.name,
+            simple_token_secret=charm_class.get_ico_token(),
+            methods="external,password,token,oauth1",
+            external="keystone.auth.plugins.external.Domain",
+            simple_token_header="SimpleToken")
+    reactive.set_state('ico.configured')
 
 
 @reactive.when('keystone-middleware.departing')
