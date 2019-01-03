@@ -28,13 +28,23 @@ def install_packages():
 @reactive.when('keystone-middleware.connected')
 def configure_keystone_middleware(principle):
     with provide_charm_instance() as charm_class:
-        charm_class.setup_simple_token_filter()
+        charm_class.render_keystone_paste_ini(True)
+        middleware_configuration = {
+            "authentication": {
+                "simple_token_header": "SimpleToken",
+                "simple_token_secret": charm_class.get_ico_token()
+            },
+            "auth": {
+                "methods": "external,password,token,oauth1",
+                "external": "keystone.auth.plugins.external.Domain",
+                "password": "keystone.auth.plugins.password.Password",
+                "token": "keystone.auth.plugins.token.Token",
+                "oauth1": "keystone.auth.plugins.oauth1.OAuth"
+            }
+        }
         principle.configure_principal(
-            service_name=charm_class.name,
-            simple_token_secret=charm_class.get_ico_token(),
-            methods="external,password,token,oauth1",
-            external="keystone.auth.plugins.external.Domain",
-            simple_token_header="SimpleToken")
+            middleware_name=charm_class.service_name,
+            configuration=middleware_configuration)
     reactive.set_state('ico.configured')
 
 
@@ -42,4 +52,4 @@ def configure_keystone_middleware(principle):
 def remove_ico_filter():
     with provide_charm_instance() as charm_class:
         charm_class.uninstall()
-        charm_class.remove_simple_token_filter()
+        charm_class.render_keystone_paste_ini(False)

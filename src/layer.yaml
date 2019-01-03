@@ -1,4 +1,4 @@
 includes:
   - 'layer:openstack'
   - 'interface:keystone-middleware'
-repo: https://github.com/aym-frikha/interface-keystone-middleware.git
+repo: https://github.com/openstack-charmers/interface-keystone-middleware.git
