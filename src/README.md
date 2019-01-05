@@ -12,6 +12,6 @@ This charm deploy a keystone Middleware, so it relies on keystone charm:
     juju deploy keystone-ico
     juju add-relation keystone keystone-ico
 
-#Limitation
+## Known Limitations and Issues
 
 The use of this charm is limited to Openstack Ocata release
