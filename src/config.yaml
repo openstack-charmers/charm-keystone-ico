@@ -10,3 +10,8 @@ options:
       existing installation. If this is a new or standalone installation,
       leave this field blank to auto-generate a token or generate your own with
       `dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64`
+  multi-tenancy:
+    type: boolean
+    default: False
+    description: |
+      For IBM Cloud Orchestrator multi-tenancy support
