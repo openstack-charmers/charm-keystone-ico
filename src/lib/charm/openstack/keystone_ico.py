@@ -2,6 +2,7 @@
 import subprocess
 import os
 import charms_openstack.charm
+import shutil
 from charmhelpers.core.hookenv import (
     config,
     log,
@@ -29,12 +30,16 @@ class KeystoneICOCharm(charms_openstack.charm.OpenStackCharm):
     # List of packages to install for this charm
     packages = ['']
 
+    # Path to copy the simpletoken extension
+    extension_dest_path = \
+        "/usr/lib/python2.7/dist-packages/keystone/middleware/"
+
     def install(self):
         log('Starting Keystone ICO installation')
-        ico_package = resource_get('package')
-        if ico_package:
-            subprocess.check_call(['dpkg', '-i', ico_package])
-        status_set('active', 'Unit is ready')
+        simpletoken_extension = resource_get('middleware_extension')
+        if simpletoken_extension:
+            shutil.copy(simpletoken_extension, self.extension_dest_path)
+            status_set('active', 'Unit is ready')
 
     def uninstall(self):
         log('Starting Keystone ICO removal')

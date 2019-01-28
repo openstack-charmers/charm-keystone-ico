@@ -28,7 +28,7 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
             },
         }
         # test that the hooks were registered via the
-        # reactive.keystone_ico_handler
+        # reactive.keystone_ico_handlers
         self.registered_hooks_test_helper(handlers, hook_set, [])
 
 
