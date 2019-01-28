@@ -19,7 +19,7 @@ requires:
     interface: juju-info
     scope: container
 resources:
-  package:
+  middleware_extension:
     type: file
-    filename: keystone-ico_1_amd64.deb
-    description: "keystone ico package"
+    filename: simpletoken.py
+    description: "IBM ico simpletoken python script"
